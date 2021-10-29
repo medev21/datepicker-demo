@@ -1,46 +1,42 @@
 import React from 'react';
 import { useField, useFormikContext } from 'formik';
 // import PropTypes from 'prop-types';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 
-const FormDatePicker = ({ ...props }) => {
+const FormDatePicker = ({ name }) => {
+
+    // with react-day-picker
 
     const { setFieldValue } = useFormikContext();
-    const [field] = useField(props);
-    const isSunday = (date) => {
-        const day = date.getDay();
-        const current = date.getDate()
-        return day === 6;
-    };
+    const [field] = useField(name);
 
-    const startDate = (val) => {
-        console.log("🚀 ~ file: index.jsx ~ line 16 ~ startDate ~ val", val)
-        const now = new Date();
-        now.setDate(now.getDate() + 14);
-        return now;
-    };
+    const disabledDaysBefore = () => {
 
-    const getMinDate = () => {
-        const now = new Date();
-        return now;
+        let start = new Date();
+        start = start.setDate(start.getDate() + 14 + (7- start.getDay()));
+        return new Date(start);
     }
 
-    return (
-        <DatePicker
-            {...field}
-            {...props}
-            // selected={(field.value && new Date(field.value)) || null}
-            selected={(field.value && startDate(field.value))|| null}
-            onChange={val => {
-                setFieldValue(field.name, val)
-            }}
-            // filterDate={isSunday}
-            placeholderText="MM/DD/YYYY"
-            minDate={new Date()}
-            // minDate={(getMinDate)}
-            showDisabledMonthNavigation
-        />
+    return(
+        <>
+            <DayPickerInput
+                {...field}
+                onDayChange={val => {
+                    setFieldValue(field.name, val)
+                }}
+
+                dayPickerProps={{
+                    disabledDays: [
+                        { before: disabledDaysBefore() },
+                        { daysOfWeek: [1, 2, 3, 4, 5, 6] },
+                    ],
+                }}
+            />
+        </>
     );
+
 };
 
 export default FormDatePicker;
