@@ -1,15 +1,34 @@
+import React, { createRef, useRef } from 'react';
 import { Formik } from 'formik';
 import FormDatePicker from './components/FormDatePicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 function App() {
+
+  const initialValues = {
+    date: "",
+    file: null,
+  };
+
+  // const inputRef = createRef();
+  const inputRef = useRef();
+
+  const constructFormData = (formikValues) => {
+
+    let formData = new FormData();
+    formData.append('file', formikValues.file);
+    return formData;
+  };
+
+
   return (
     <div className="App">
       <Formik
-        initialValues={{ date: "" }}
+        initialValues={initialValues}
         onSubmit={(values, { setSubmitting }) => {
-          alert(JSON.stringify(values))
+          console.log("values", values);
+          // alert(values.file)
         }}
       >
         {props => {
@@ -37,6 +56,22 @@ function App() {
               >
                 Reset
               </button> */}
+
+              <input
+                type="file"
+                style={{display: "none"}}
+                onChange = {event => {
+                  setFieldValue("file", event.currentTarget.files[0])
+                }}
+                ref={inputRef}
+              />
+
+              <button
+                type="button"
+                onClick={() => inputRef.current.click() }
+              >
+                Upload Address Form
+              </button>
               <button type="submit" disabled={isSubmitting}>
                 Submit
               </button>
