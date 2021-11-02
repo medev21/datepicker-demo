@@ -2,8 +2,6 @@ import React, { createRef, useRef } from 'react';
 import { Formik } from 'formik';
 import FormDatePicker from './components/FormDatePicker';
 
-import 'react-datepicker/dist/react-datepicker.css';
-
 function App() {
 
   const initialValues = {
@@ -14,12 +12,22 @@ function App() {
   // const inputRef = createRef();
   const inputRef = useRef();
 
-  const constructFormData = (formikValues) => {
+  const disabledDaysBefore = () => {
+    let start = new Date();
+    start = start.setDate(start.getDate() + 14 + (2 - start.getDay()));
+    return new Date(start);
+  }
 
-    let formData = new FormData();
-    formData.append('file', formikValues.file);
-    return formData;
-  };
+  const dayPickerProps= {
+    /*
+     * make Tuesday the only available date to pick
+     * two weeks from the current date
+     */
+    disabledDays: [
+        { before: disabledDaysBefore() },
+        { daysOfWeek: [0,1, 3, 4, 5, 6] },
+    ],
+  }
 
 
   return (
@@ -47,15 +55,10 @@ function App() {
 
           return (
             <form onSubmit={handleSubmit}>
-              <FormDatePicker name="date" />
-              {/* <button
-                type="button"
-                className="outline"
-                onClick={handleReset}
-                disabled={!dirty || isSubmitting}
-              >
-                Reset
-              </button> */}
+              <FormDatePicker
+                name="date"
+                dayPickerProps={dayPickerProps}
+              />
 
               <input
                 type="file"
