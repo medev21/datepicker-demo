@@ -2,8 +2,6 @@ import React, { createRef, useRef } from 'react';
 import { Formik } from 'formik';
 import FormDatePicker from './components/FormDatePicker';
 
-import 'react-datepicker/dist/react-datepicker.css';
-
 function App() {
 
   const initialValues = {
